@@ -1,5 +1,395 @@
-<h1>Just Math Games</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Just Math Games</title>
 
-<a href="Games/Five Nights At Epstein's.html">
-  <button>Five Nights At Epstein's</button>
-</a>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0b0f1a;
+  color: #e6e6ff;
+}
+
+/* TOP BAR */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: linear-gradient(90deg, #3b3bff, #7a2cff);
+  box-shadow: 0 4px 20px rgba(122, 44, 255, 0.3);
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+}
+
+.search {
+  width: 40%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(10, 12, 25, 0.75);
+  color: #ffffff;
+  outline: none;
+  font-size: 14px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.4);
+}
+
+.search::placeholder {
+  color: rgba(230, 230, 255, 0.6);
+}
+
+.search:focus {
+  border: 1px solid rgba(122, 44, 255, 0.8);
+  box-shadow: 0 0 12px rgba(122, 44, 255, 0.4);
+  background: rgba(15, 18, 35, 0.95);
+}
+
+/* CATEGORIES */
+.categories {
+  display: flex;
+  gap: 10px;
+  padding: 10px 20px;
+  background: #0f1426;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.categories button {
+  background: rgba(122, 44, 255, 0.15);
+  border: 1px solid rgba(122, 44, 255, 0.4);
+  color: #cfcfff;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.categories button:hover {
+  background: rgba(122, 44, 255, 0.35);
+  transform: translateY(-2px);
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+  padding: 20px;
+}
+
+/* CARD */
+.card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(122, 44, 255, 0.25);
+  border-radius: 15px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: 0.25s;
+  backdrop-filter: blur(8px);
+}
+
+.card:hover {
+  transform: translateY(-6px) scale(1.03);
+  box-shadow: 0 10px 30px rgba(122, 44, 255, 0.25);
+  border-color: rgba(122, 44, 255, 0.6);
+}
+
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  filter: saturate(1.1) contrast(1.1);
+}
+
+.card-content {
+  padding: 10px;
+}
+
+.card h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.card p {
+  margin: 5px 0 0;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* OVERLAY VIEW */
+#gameOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #070a14;
+  display: none;
+  flex-direction: column;
+  z-index: 9999;
+}
+
+.overlayBar {
+  background: linear-gradient(90deg, #3b3bff, #7a2cff);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.overlayBar button {
+  background: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#gameFrame {
+  flex: 1;
+  width: 100%;
+  border: none;
+}
+
+#showPlayer {
+  flex: 1;
+  width: 100%;
+  display: none;
+  background: black;
+}
+
+#showVideo {
+  width: 100%;
+  height: 100%;
+  background: black;
+}
+
+#episodeSelect {
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="logo">JustMathGames</div>
+  <input class="search" placeholder="Search games and shows..." />
+</div>
+
+<!-- CATEGORIES -->
+<div class="categories">
+  <button onclick="filterCategory('All')">All</button>
+  <button onclick="filterCategory('Games')">Games</button>
+  <button onclick="filterCategory('Shows')">Shows</button>
+</div>
+
+<!-- GAME GRID -->
+<div class="grid">
+
+  <div class="card" data-type="game" data-href="Games/Five Nights at Epstein's.html" data-category="Games">
+    <img src="Assets/Five Nights at Epstein's.png">
+    <div class="card-content">
+      <h3>Five Nights at Epstein's</h3>
+      <p>Games</p>
+    </div>
+  </div>
+
+  <div class="card" data-type="game" data-href="Games/Hollow Knight.html" data-category="Games">
+    <img src="Assets/Hollow Knight.png">
+    <div class="card-content">
+      <h3>Hollow Knight</h3>
+      <p>Games</p>
+    </div>
+  </div>
+
+  <div class="card" data-type="game" data-href="Games/Hollow Knight Silksong.html" data-category="Games">
+    <img src="Assets/Hollow Knight Silksong.png">
+    <div class="card-content">
+      <h3>Hollow Knight: Silksong</h3>
+      <p>Games</p>
+    </div>
+  </div>
+
+  <div class="card" data-type="game" data-href="Games/ULTRAKILL Prelude.html" data-category="Games">
+    <img src="Assets/ULTRAKILL.png">
+    <div class="card-content">
+      <h3>ULTRAKILL Prelude</h3>
+      <p>Games</p>
+    </div>
+  </div>
+
+  <div class="card" data-type="game" data-href="Games/Territorial.io.html" data-category="Games">
+    <img src="Assets/Territorial.io.png">
+    <div class="card-content">
+      <h3>Territorial.io</h3>
+      <p>Games</p>
+    </div>
+  </div>
+
+  <div class="card" data-type="game" data-href="Games/Balatro.html" data-category="Games">
+    <img src="Assets/Balatro.png">
+    <div class="card-content">
+      <h3>Balatro</h3>
+      <p>Games</p>
+    </div>
+  </div>
+
+  <div
+    class="card"
+    data-type="show"
+    data-category="Shows"
+    data-title="Invincible"
+    data-episodes='[
+      "https://jumpshare.com/embed/IwGTShgJ5QcZdW9Kqvpg"
+    ]'
+  >
+    <img src="Assets/Invincible.jpg">
+    <div class="card-content">
+      <h3>Invincible</h3>
+      <p>Shows</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- OVERLAY -->
+<div id="gameOverlay">
+  <div class="overlayBar">
+    <button onclick="closeGame()">⬅ Back</button>
+
+    <select id="episodeSelect" onchange="changeEpisode()" style="display:none;">
+    </select>
+  </div>
+
+  <!-- Games -->
+  <iframe id="gameFrame"></iframe>
+
+  <!-- Shows -->
+  <div id="showPlayer" style="display:none;">
+    <iframe
+      id="showFrame"
+      src=""
+      frameborder="0"
+      allowfullscreen
+      style="width:100%; height:100%; border:none;">
+    </iframe>
+  </div>
+</div>
+
+<!-- SCRIPT -->
+<script>
+const search = document.querySelector(".search");
+const cards = document.querySelectorAll(".card");
+const overlay = document.getElementById("gameOverlay");
+const frame = document.getElementById("gameFrame");
+const showPlayer = document.getElementById("showPlayer");
+const showFrame = document.getElementById("showFrame");
+const episodeSelect = document.getElementById("episodeSelect");
+
+let currentCategory = "All";
+let currentEpisodes = [];
+
+/* SEARCH */
+search.addEventListener("input", applyFilters);
+
+function applyFilters() {
+  const value = search.value.toLowerCase();
+
+  cards.forEach(card => {
+    const text = card.innerText.toLowerCase();
+
+    const matchesSearch = text.includes(value);
+    const matchesCategory =
+      currentCategory === "All" ||
+      card.dataset.category === currentCategory;
+
+    card.style.display =
+      (matchesSearch && matchesCategory) ? "" : "none";
+  });
+}
+
+/* CATEGORY FILTER */
+function filterCategory(category) {
+  currentCategory = category;
+  applyFilters();
+}
+
+/* CARD CLICK */
+cards.forEach(card => {
+  card.addEventListener("click", () => {
+    const type = card.dataset.type;
+
+    overlay.style.display = "flex";
+
+    if (type === "game") {
+      openGame(card.dataset.href);
+    }
+
+    if (type === "show") {
+      openShow(JSON.parse(card.dataset.episodes));
+    }
+  });
+});
+
+/* OPEN GAME */
+function openGame(url) {
+  frame.style.display = "block";
+  showPlayer.style.display = "none";
+  episodeSelect.style.display = "none";
+
+  frame.src = url;
+}
+
+/* OPEN SHOW */
+function openShow(episodes) {
+  frame.style.display = "none";
+  showPlayer.style.display = "block";
+  episodeSelect.style.display = "block";
+
+  currentEpisodes = episodes;
+  episodeSelect.innerHTML = "";
+
+  episodes.forEach((episode, index) => {
+    const option = document.createElement("option");
+    option.value = index;
+    option.textContent = "Episode " + (index + 1);
+    episodeSelect.appendChild(option);
+  });
+
+  loadEpisode(0);
+}
+
+/* LOAD EPISODE */
+function loadEpisode(index) {
+  showFrame.src = currentEpisodes[index];
+}
+
+/* CHANGE EPISODE */
+function changeEpisode() {
+  loadEpisode(episodeSelect.value);
+}
+
+/* CLOSE */
+function closeGame() {
+  overlay.style.display = "none";
+
+  frame.src = "";
+  showFrame.src = "";
+
+  frame.style.display = "block";
+  showPlayer.style.display = "none";
+  episodeSelect.style.display = "none";
+}
+</script>
+
+</body>
+</html>
