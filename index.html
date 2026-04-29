@@ -288,9 +288,17 @@ body {
     data-type="show"
     data-category="Shows"
     data-title="Invincible"
-    data-episodes='[
-      "https://movies.goadeddev.dpdns.org/tv/95557?season=1&episode=1"
-    ]'
+    data-seasons='{
+      "1": [
+        "https://movies.goadeddev.dpdns.org/tv/95557?season=1&episode=1",
+        "https://movies.goadeddev.dpdns.org/tv/95557?season=1&episode=2",
+        "https://movies.goadeddev.dpdns.org/tv/95557?season=1&episode=3"
+      ],
+      "2": [
+        "https://movies.goadeddev.dpdns.org/tv/95557?season=2&episode=1",
+        "https://movies.goadeddev.dpdns.org/tv/95557?season=2&episode=2"
+      ]
+    }'
   >
     <img src="Assets/Invincible.jpg">
     <div class="card-content">
@@ -306,6 +314,9 @@ body {
   <div class="overlayBar">
     <button onclick="closeGame()">⬅ Back</button>
 
+    <select id="seasonSelect" onchange="changeSeason()" style="display:none;">
+    </select>
+    
     <select id="episodeSelect" onchange="changeEpisode()" style="display:none;">
     </select>
   </div>
@@ -334,6 +345,10 @@ const frame = document.getElementById("gameFrame");
 const showPlayer = document.getElementById("showPlayer");
 const showFrame = document.getElementById("showFrame");
 const episodeSelect = document.getElementById("episodeSelect");
+const seasonSelect = document.getElementById("seasonSelect");
+
+let currentSeasons = {};
+let currentSeason = 1;
 
 let currentCategory = "All";
 let currentEpisodes = [];
@@ -375,7 +390,7 @@ cards.forEach(card => {
     }
 
     if (type === "show") {
-      openShow(JSON.parse(card.dataset.episodes));
+      openShow(JSON.parse(card.dataset.seasons));
     }
   });
 });
@@ -390,13 +405,11 @@ function openGame(url) {
 }
 
 /* OPEN SHOW */
-function openShow(episodes) {
-  frame.style.display = "none";
-  showPlayer.style.display = "block";
-  episodeSelect.style.display = "block";
 
-  currentEpisodes = episodes;
+function populateEpisodes(season) {
   episodeSelect.innerHTML = "";
+
+  const episodes = currentSeasons[season];
 
   episodes.forEach((episode, index) => {
     const option = document.createElement("option");
@@ -407,15 +420,45 @@ function openShow(episodes) {
 
   loadEpisode(0);
 }
+  
+function openShow(seasons) {
+  frame.style.display = "none";
+  showPlayer.style.display = "block";
+
+  seasonSelect.style.display = "block";
+  episodeSelect.style.display = "block";
+
+  currentSeasons = seasons;
+
+  seasonSelect.innerHTML = "";
+
+  Object.keys(seasons).forEach(season => {
+    const option = document.createElement("option");
+    option.value = season;
+    option.textContent = "Season " + season;
+    seasonSelect.appendChild(option);
+  });
+
+  currentSeason = Object.keys(seasons)[0];
+  seasonSelect.value = currentSeason;
+
+  populateEpisodes(currentSeason);
+}
 
 /* LOAD EPISODE */
 function loadEpisode(index) {
-  showFrame.src = currentEpisodes[index];
+  const episodes = currentSeasons[currentSeason];
+  showFrame.src = episodes[index];
 }
 
 /* CHANGE EPISODE */
 function changeEpisode() {
   loadEpisode(episodeSelect.value);
+}
+
+function changeSeason() {
+  currentSeason = seasonSelect.value;
+  populateEpisodes(currentSeason);
 }
 
 /* CLOSE */
@@ -427,6 +470,7 @@ function closeGame() {
 
   frame.style.display = "block";
   showPlayer.style.display = "none";
+  seasonSelect.style.display = "none";
   episodeSelect.style.display = "none";
 }
 </script>
