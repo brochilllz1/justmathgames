@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Show Player</title>
+
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+}
+
+iframe {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    border: none;
+}
+
+/* simple controls overlay */
+.controls {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 9999;
+    display: flex;
+    gap: 10px;
+}
+
+button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NO ID iframe (as requested) -->
+<iframe allowfullscreen></iframe>
+
+<!-- simple controls -->
+<div class="controls">
+    <button onclick="prev()">Prev</button>
+    <button onclick="next()">Next</button>
+</div>
+
+<script>
+let season = 1;
+let episode = 1;
+
+const maxEpisodes = {
+    1: 8,
+    2: 8,
+    3: 8,
+    4: 8
+};
+
+// grab iframe WITHOUT ID
+const frame = document.querySelector("iframe");
+
+function load() {
+    frame.src =
+        `https://vidcore.net/tv/?season=${season}&episode=${episode}`;
+}
+
+function next() {
+    episode++;
+
+    if (episode > maxEpisodes[season]) {
+        episode = 1;
+        season++;
+    }
+
+    load();
+}
+
+function prev() {
+    episode--;
+
+    if (episode < 1) {
+        season--;
+        if (season < 1) season = 1;
+        episode = maxEpisodes[season];
+    }
+
+    load();
+}
+
+// initial load
+load();
+</script>
+
+</body>
+</html>
