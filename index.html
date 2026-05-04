@@ -304,62 +304,14 @@ body {
       <p>Games</p>
     </div>
   </div>
-  
-  <div class="card" data-type="game" data-href="tools/Balatro.html" data-category="Games">
-    <img src="Assets/Invincible.jpg">
-    <div class="card-content">
-      <h3>TEST</h3>
-      <p>Games</p>
-    </div>
-  </div>
 
   <div
     class="card"
     data-type="show"
-    data-category="Blocked"
+    data-category="Shows"
+    data-id="95557"
     data-title="Invincible"
-    data-seasons='{
-      "1": [
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=1&episode=1",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=1&episode=2",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=1&episode=3",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=1&episode=4",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=1&episode=5",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=1&episode=6",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=1&episode=7",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=1&episode=8"
-      ],
-      "2": [
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=2&episode=1",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=2&episode=2",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=2&episode=3",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=2&episode=4",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=2&episode=5",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=2&episode=6",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=2&episode=7",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=2&episode=8"
-      ],
-      "3": [
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=3&episode=1",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=3&episode=2",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=3&episode=3",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=3&episode=4",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=3&episode=5",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=3&episode=6",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=3&episode=7",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=3&episode=8"
-      ],
-      "4": [
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=4&episode=1",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=4&episode=2",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=4&episode=3",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=4&episode=4",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=4&episode=5",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=4&episode=6",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=4&episode=7",
-        "https://movies.goadeddev.dpdns.org/tv/95557?season=4&episode=8"
-      ]
-    }'
+    data-seasons='{"1":8,"2":8,"3":8,"4":8}'
   >
     <img src="Assets/Invincible.jpg">
     <div class="card-content">
@@ -408,11 +360,11 @@ const showFrame = document.getElementById("showFrame");
 const episodeSelect = document.getElementById("episodeSelect");
 const seasonSelect = document.getElementById("seasonSelect");
 
+let currentShowId = null;
 let currentSeasons = {};
 let currentSeason = 1;
 
 let currentCategory = "All";
-let currentEpisodes = [];
 
 /* SEARCH */
 search.addEventListener("input", applyFilters);
@@ -451,7 +403,10 @@ cards.forEach(card => {
     }
 
     if (type === "show") {
-      openShow(JSON.parse(card.dataset.seasons));
+      openShow(
+        JSON.parse(card.dataset.seasons),
+        card.dataset.id
+      );
     }
   });
 });
@@ -470,19 +425,19 @@ function openGame(url) {
 function populateEpisodes(season) {
   episodeSelect.innerHTML = "";
 
-  const episodes = currentSeasons[season];
+  const episodeCount = currentSeasons[season];
 
-  episodes.forEach((episode, index) => {
+  for (let i = 1; i <= episodeCount; i++) {
     const option = document.createElement("option");
-    option.value = index;
-    option.textContent = "Episode " + (index + 1);
+    option.value = i;
+    option.textContent = "Episode " + i;
     episodeSelect.appendChild(option);
-  });
+  }
 
-  loadEpisode(0);
+  loadEpisode(1);
 }
   
-function openShow(seasons) {
+function openShow(seasons, id) {
   frame.style.display = "none";
   showPlayer.style.display = "block";
 
@@ -490,6 +445,7 @@ function openShow(seasons) {
   episodeSelect.style.display = "block";
 
   currentSeasons = seasons;
+  currentShowId = id;
 
   seasonSelect.innerHTML = "";
 
@@ -500,16 +456,15 @@ function openShow(seasons) {
     seasonSelect.appendChild(option);
   });
 
-  currentSeason = Object.keys(seasons)[0];
+  currentSeason = Number(Object.keys(seasons)[0]);
   seasonSelect.value = currentSeason;
 
   populateEpisodes(currentSeason);
 }
 
 /* LOAD EPISODE */
-function loadEpisode(index) {
-  const episodes = currentSeasons[currentSeason];
-  showFrame.src = episodes[index];
+function loadEpisode(episodeNumber) {
+  showFrame.src = `https://movies.goadeddev.dpdns.org/tv/${currentShowId}?season=${currentSeason}&episode=${episodeNumber}`;
 }
 
 /* CHANGE EPISODE */
@@ -518,8 +473,9 @@ function changeEpisode() {
 }
 
 function changeSeason() {
-  currentSeason = seasonSelect.value;
+  currentSeason = Number(seasonSelect.value);
   populateEpisodes(currentSeason);
+  episodeSelect.value = 1;
 }
 
 /* CLOSE */
