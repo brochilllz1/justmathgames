@@ -202,6 +202,14 @@ body {
 <!-- GAME GRID -->
 <div class="grid">
 
+  <div class="card" data-type="newtab" data-href="https://docs.google.com/forms/d/1RpPAYJTy91Fbu1iQpvIOxtA1d4a2pSsBhuiIry5OLas/edit" data-category="Tools">
+    <img src="Assets/suggestions.jpeg">
+    <div class="card-content">
+      <h3>Suggestions</h3>
+      <p>Tools</p>
+    </div>
+  </div>
+  
   <div class="card" data-type="game" data-href="Games/Five Nights at Epstein's.html" data-category="Games">
     <img src="Assets/Five Nights at Epstein's.png">
     <div class="card-content">
@@ -461,6 +469,10 @@ cards.forEach(card => {
       openGame(card.dataset.href);
     }
 
+    if (type === "newtab") {
+      window.open(card.dataset.href, "_blank");
+    }
+
     if (type === "show") {
       openShow(
         JSON.parse(card.dataset.seasons),
@@ -530,17 +542,6 @@ function openShow(seasons, id, player) {
 /* LOAD EPISODE */
 function loadEpisode(episodeNumber) {
   showFrame.src = `https://player.autoembed.app/embed/tv/${currentShowId}/${currentSeason}/${episodeNumber}
-  // if(currentPlayer==1){
-  //   showFrame.src = `https://vsembed.ru/embed/tv?tmdb=${currentShowId}&season=${currentSeason}&episode=${episodeNumber}`;
-  // }else if(currentPlayer==2){
-  //   showFrame.src = `https://vsembed.ru/embed/movie?tmdb=${currentShowId}`;
-  // }
-  // }else if(currentPlayer==3){
-  //   showFrame.src = `https://movies.goadeddev.dpdns.org/tv/${currentShowId}?season=${currentSeason}&episode=${episodeNumber}`;
-  // }
-  // }else if(currentPlayer==4){
-  //   showFrame.src = `https://player.autoembed.app/embed/tv/${currentShowId}/${currentSeason}/${episodeNumber}`;
-  // }
 }
 
 /* CHANGE EPISODE */
